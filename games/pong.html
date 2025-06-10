@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASCII Pong vs Bot</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            line-height: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .game-container {
+            white-space: pre;
+            text-align: center;
+            animation: flicker 3s infinite;
+            user-select: none;
+        }
+
+        @keyframes flicker {
+            0%, 90%, 100% { opacity: 1; }
+            95% { opacity: 0.95; }
+        }
+
+        .game-header {
+            color: #00ffff;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .score {
+            color: #ffff00;
+            font-size: 20px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .game-field {
+            font-size: 12px;
+            line-height: 1;
+            border: 2px solid #00ff00;
+            padding: 5px;
+            background: #001100;
+            box-shadow: 0 0 10px #00ff00;
+        }
+
+        .controls {
+            color: #00ffff;
+            font-size: 12px;
+            margin-top: 15px;
+        }
+
+        .game-status {
+            color: #ffff00;
+            font-size: 14px;
+            margin-top: 10px;
+            min-height: 20px;
+        }
+
+        .blink {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        .difficulty {
+            color: #ff00ff;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            ████████╗ ███████╗██████╗ ███╗   ███╗██╗███╗   ██╗ █████╗ ██╗         
+            ╚══██╔══╝██╔════╝██╔══██╗████╗ ████║██║████╗  ██║██╔══██╗██║         
+               ██║   █████╗  ██████╔╝██╔████╔██║██║██╔██╗ ██║███████║██║         
+               ██║   ██╔══╝  ██╔══██╗██║╚██╔╝██║██║██║╚██╗██║██╔══██║██║         
+               ██║   ███████╗██║  ██║██║ ╚═╝ ██║██║██║ ╚████║██║  ██║███████╗    
+               ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝    
+                                                                                 
+                                   PONG vs  BOT                               
+        </div>
+        
+        <div class="difficulty">
+            Difficulty: <span id="difficulty-level">NORMAL</span> | Bot Skill: <span id="bot-skill">75%</span>
+        </div>
+        
+        <div class="score">
+            PLAYER: <span id="player-score">0</span> | BOT: <span id="bot-score">0</span>
+        </div>
+        
+        <div class="game-field" id="game-field"></div>
+        
+        <div class="controls">
+            W/S: Move Paddle | SPACE: Pause | R: Restart | ESC: Menu | 1/2/3: Difficulty
+        </div>
+        
+        <div class="game-status" id="game-status"></div>
+    </div>
+
+    <script>
+        class PongBotGame {
+            constructor() {
+                this.width = 70;
+                this.height = 25;
+                this.paddleHeight = 5;
+                this.paddleSpeed = 1;
+                
+                // Difficulty settings
+                this.difficulties = {
+                    easy: { speed: 0.6, reaction: 0.4, name: 'EASY', skill: '50%' },
+                    normal: { speed: 0.8, reaction: 0.7, name: 'NORMAL', skill: '75%' },
+                    hard: { speed: 1.0, reaction: 0.9, name: 'HARD', skill: '95%' }
+                };
+                this.currentDifficulty = 'normal';
+                
+                // Game state
+                this.gameRunning = false;
+                this.gameStarted = false;
+                this.paused = false;
+                this.gameSpeed = 120;
+                
+                // Ball
+                this.ball = {
+                    x: this.width / 2,
+                    y: this.height / 2,
+                    dx: 1,
+                    dy: 0.5,
+                    speed: 1
+                };
+                
+                // Player paddle (left)
+                this.player = {
+                    x: 2,
+                    y: (this.height / 2) - (this.paddleHeight / 2),
+                    score: 0,
+                    targetY: (this.height / 2) - (this.paddleHeight / 2)
+                };
+                
+                // Bot paddle (right)
+                this.bot = {
+                    x: this.width - 3,
+                    y: (this.height / 2) - (this.paddleHeight / 2),
+                    score: 0,
+                    targetY: (this.height / 2) - (this.paddleHeight / 2),
+                    reactionDelay: 0
+                };
+                
+                // Input handling
+                this.keys = {};
+                this.setupEventListeners();
+                
+                // DOM elements
+                this.field = document.getElementById('game-field');
+                this.statusElement = document.getElementById('game-status');
+                this.playerScoreElement = document.getElementById('player-score');
+                this.botScoreElement = document.getElementById('bot-score');
+                this.difficultyElement = document.getElementById('difficulty-level');
+                this.skillElement = document.getElementById('bot-skill');
+                
+                this.updateDifficultyDisplay();
+                this.showStartScreen();
+            }
+            
+            setupEventListeners() {
+                document.addEventListener('keydown', (e) => {
+                    this.keys[e.key.toLowerCase()] = true;
+                    
+                    switch(e.key.toLowerCase()) {
+                        case ' ':
+                            e.preventDefault();
+                            this.togglePause();
+                            break;
+                        case 'escape':
+                            this.returnToMenu();
+                            break;
+                        case 'r':
+                            this.restart();
+                            break;
+                        case 'enter':
+                            if (!this.gameStarted) {
+                                this.startGame();
+                            }
+                            break;
+                        case '1':
+                            this.setDifficulty('easy');
+                            break;
+                        case '2':
+                            this.setDifficulty('normal');
+                            break;
+                        case '3':
+                            this.setDifficulty('hard');
+                            break;
+                    }
+                });
+                
+                document.addEventListener('keyup', (e) => {
+                    this.keys[e.key.toLowerCase()] = false;
+                });
+            }
+            
+            setDifficulty(level) {
+                if (!this.gameStarted) {
+                    this.currentDifficulty = level;
+                    this.updateDifficultyDisplay();
+                }
+            }
+            
+            updateDifficultyDisplay() {
+                const diff = this.difficulties[this.currentDifficulty];
+                this.difficultyElement.textContent = diff.name;
+                this.skillElement.textContent = diff.skill;
+            }
+            
+            showStartScreen() {
+                this.statusElement.innerHTML = '<span class="blink">Press ENTER to start! Use 1/2/3 to change difficulty</span>';
+                this.render();
+            }
+            
+            startGame() {
+                this.gameStarted = true;
+                this.gameRunning = true;
+                this.statusElement.innerHTML = 'Game Started! First to 10 wins!';
+                this.resetBall();
+                this.gameLoop();
+                
+                setTimeout(() => {
+                    this.statusElement.innerHTML = '';
+                }, 2000);
+            }
+            
+            togglePause() {
+                if (!this.gameStarted) return;
+                
+                this.paused = !this.paused;
+                this.statusElement.innerHTML = this.paused ? 
+                    '<span class="blink">PAUSED - Press SPACE to continue</span>' : '';
+                
+                if (!this.paused) {
+                    this.gameLoop();
+                }
+            }
+            
+            restart() {
+                this.gameStarted = false;
+                this.gameRunning = false;
+                this.paused = false;
+                
+                this.player.score = 0;
+                this.bot.score = 0;
+                this.player.y = (this.height / 2) - (this.paddleHeight / 2);
+                this.bot.y = (this.height / 2) - (this.paddleHeight / 2);
+                
+                this.updateScore();
+                this.showStartScreen();
+            }
+            
+            returnToMenu() {
+                if (confirm('Return to main menu?')) {
+                    // W rzeczywistej implementacji - powrót do menu
+                    window.location.href = 'index.html';
+                }
+            }
+            
+            resetBall() {
+                this.ball.x = this.width / 2;
+                this.ball.y = this.height / 2;
+                this.ball.dx = Math.random() > 0.5 ? 1 : -1;
+                this.ball.dy = (Math.random() - 0.5) * 1.5;
+                this.ball.speed = 1;
+            }
+            
+            updateBot() {
+                const difficulty = this.difficulties[this.currentDifficulty];
+                
+                // Bot AI - predict ball position
+                let predictedY = this.ball.y;
+                
+                // Only react if ball is moving toward bot
+                if (this.ball.dx > 0) {
+                    // Simple prediction - where will ball be when it reaches bot
+                    const timeToReach = (this.bot.x - this.ball.x) / this.ball.dx;
+                    predictedY = this.ball.y + (this.ball.dy * timeToReach);
+                    
+                    // Add some randomness based on difficulty
+                    const randomOffset = (Math.random() - 0.5) * (10 * (1 - difficulty.reaction));
+                    predictedY += randomOffset;
+                }
+                
+                // Target center of paddle to predicted ball position
+                this.bot.targetY = predictedY - (this.paddleHeight / 2);
+                
+                // Clamp to field bounds
+                this.bot.targetY = Math.max(0, Math.min(this.height - this.paddleHeight, this.bot.targetY));
+                
+                // Move bot paddle toward target with speed based on difficulty
+                const diff = this.bot.targetY - this.bot.y;
+                const moveSpeed = this.paddleSpeed * difficulty.speed;
+                
+                if (Math.abs(diff) > 0.5) {
+                    if (diff > 0) {
+                        this.bot.y = Math.min(this.bot.y + moveSpeed, this.bot.targetY);
+                    } else {
+                        this.bot.y = Math.max(this.bot.y - moveSpeed, this.bot.targetY);
+                    }
+                }
+                
+                // Keep bot in bounds
+                this.bot.y = Math.max(0, Math.min(this.height - this.paddleHeight, this.bot.y));
+            }
+            
+            update() {
+                if (!this.gameRunning || this.paused) return;
+                
+                // Update player paddle
+                if (this.keys['w'] && this.player.y > 0) {
+                    this.player.y -= this.paddleSpeed;
+                }
+                if (this.keys['s'] && this.player.y < this.height - this.paddleHeight) {
+                    this.player.y += this.paddleSpeed;
+                }
+                
+                // Update bot
+                this.updateBot();
+                
+                // Update ball
+                this.ball.x += this.ball.dx * this.ball.speed;
+                this.ball.y += this.ball.dy * this.ball.speed;
+                
+                // Ball collision with top/bottom walls
+                if (this.ball.y <= 0 || this.ball.y >= this.height - 1) {
+                    this.ball.dy = -this.ball.dy;
+                    this.ball.y = Math.max(0, Math.min(this.height - 1, this.ball.y));
+                }
+                
+                // Ball collision with paddles
+                this.checkPaddleCollision();
+                
+                // Score detection
+                if (this.ball.x <= 0) {
+                    this.bot.score++;
+                    this.updateScore();
+                    this.scoreAnimation('BOT SCORES!');
+                } else if (this.ball.x >= this.width) {
+                    this.player.score++;
+                    this.updateScore();
+                    this.scoreAnimation('PLAYER SCORES!');
+                }
+                
+                // Check for game end
+                if (this.player.score >= 10 || this.bot.score >= 10) {
+                    this.endGame();
+                }
+            }
+            
+            checkPaddleCollision() {
+                // Player paddle collision
+                if (this.ball.x <= this.player.x + 1 && 
+                    this.ball.x >= this.player.x &&
+                    this.ball.y >= this.player.y && 
+                    this.ball.y <= this.player.y + this.paddleHeight) {
+                    
+                    this.ball.dx = Math.abs(this.ball.dx);
+                    this.ball.x = this.player.x + 1;
+                    
+                    // Add spin based on where ball hits paddle
+                    const hitPosition = (this.ball.y - this.player.y) / this.paddleHeight;
+                    this.ball.dy = (hitPosition - 0.5) * 2;
+                    
+                    // Increase ball speed slightly
+                    this.ball.speed = Math.min(this.ball.speed + 0.05, 2);
+                }
+                
+                // Bot paddle collision
+                if (this.ball.x >= this.bot.x - 1 && 
+                    this.ball.x <= this.bot.x &&
+                    this.ball.y >= this.bot.y && 
+                    this.ball.y <= this.bot.y + this.paddleHeight) {
+                    
+                    this.ball.dx = -Math.abs(this.ball.dx);
+                    this.ball.x = this.bot.x - 1;
+                    
+                    // Add spin based on where ball hits paddle
+                    const hitPosition = (this.ball.y - this.bot.y) / this.paddleHeight;
+                    this.ball.dy = (hitPosition - 0.5) * 2;
+                    
+                    // Increase ball speed slightly
+                    this.ball.speed = Math.min(this.ball.speed + 0.05, 2);
+                }
+            }
+            
+            scoreAnimation(message) {
+                this.statusElement.innerHTML = `<span class="blink">${message}</span>`;
+                this.paused = true;
+                
+                setTimeout(() => {
+                    this.statusElement.innerHTML = '';
+                    this.resetBall();
+                    this.paused = false;
+                    if (this.gameRunning) this.gameLoop();
+                }, 1500);
+            }
+            
+            endGame() {
+                this.gameRunning = false;
+                const winner = this.player.score >= 10 ? 'PLAYER WINS!' : 'BOT WINS!';
+                this.statusElement.innerHTML = `<span class="blink">${winner} Press R to restart</span>`;
+            }
+            
+            updateScore() {
+                this.playerScoreElement.textContent = this.player.score;
+                this.botScoreElement.textContent = this.bot.score;
+            }
+            
+            render() {
+                let field = '';
+                
+                // Create field
+                for (let y = 0; y < this.height; y++) {
+                    let row = '';
+                    for (let x = 0; x < this.width; x++) {
+                        // Center line
+                        if (x === Math.floor(this.width / 2)) {
+                            row += y % 2 === 0 ? '│' : '┊';
+                        }
+                        // Player paddle
+                        else if (x === this.player.x && 
+                                y >= Math.floor(this.player.y) && 
+                                y < Math.floor(this.player.y) + this.paddleHeight) {
+                            row += '█';
+                        }
+                        // Bot paddle
+                        else if (x === this.bot.x && 
+                                y >= Math.floor(this.bot.y) && 
+                                y < Math.floor(this.bot.y) + this.paddleHeight) {
+                            row += '█';
+                        }
+                        // Ball
+                        else if (x === Math.floor(this.ball.x) && y === Math.floor(this.ball.y)) {
+                            row += '●';
+                        }
+                        // Empty space
+                        else {
+                            row += ' ';
+                        }
+                    }
+                    field += row + '\n';
+                }
+                
+                this.field.textContent = field;
+            }
+            
+            gameLoop() {
+                if (!this.gameRunning || this.paused) return;
+                
+                this.update();
+                this.render();
+                
+                setTimeout(() => {
+                    this.gameLoop();
+                }, this.gameSpeed);
+            }
+        }
+        
+        // Initialize game
+        const game = new PongBotGame();
+    </script>
+</body>
+</html>
