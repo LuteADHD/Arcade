@@ -40,7 +40,7 @@
             border: 2px solid #00ff00;
             padding: 10px;
             font-family: 'Courier New', monospace;
-            font-size: 14px;
+            font-size: 18px;
             line-height: 1.0;
             white-space: pre;
             color: #00ff00;
@@ -91,10 +91,10 @@
         console.log("Game loading...");
 
         let game = {
-            width: 30,
-            height: 15,
-            snake: [{x: 15, y: 7}],
-            food: {x: 10, y: 5},
+            width: 50,
+            height: 25,
+            snake: [{x: 25, y: 12}],
+            food: {x: 15, y: 8},
             direction: {x: 0, y: 0},
             nextDirection: {x: 0, y: 0},
             score: 0,
@@ -241,7 +241,7 @@
 
         function restartGame() {
             console.log("Restarting game...");
-            game.snake = [{x: 15, y: 7}];
+            game.snake = [{x: 25, y: 12}];
             game.direction = {x: 0, y: 0};
             game.nextDirection = {x: 0, y: 0};
             game.score = 0;
