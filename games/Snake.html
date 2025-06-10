@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASCII Snake Game</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #000;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            line-height: 1.2;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .game-title {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #00ff00;
+            white-space: pre;
+            font-size: 12px;
+            line-height: 1.0;
+        }
+
+        .score {
+            text-align: center;
+            color: #ffff00;
+            margin-bottom: 10px;
+        }
+
+        .game-board {
+            background: #001100;
+            border: 2px solid #00ff00;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.0;
+            white-space: pre;
+            color: #00ff00;
+        }
+
+        .status {
+            text-align: center;
+            margin-top: 10px;
+            color: #00ffff;
+        }
+
+        .blink {
+            animation: blink 1s infinite;
+        }
+
+        .game-over {
+            color: #ff0000;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-title">
+███████ ███    ██  █████  ██   ██ ████████
+██      ████   ██ ██   ██ ██  ██  ██      
+███████ ██ ██  ██ ███████ █████   ██████  
+     ██ ██  ██ ██ ██   ██ ██  ██  ██      
+███████ ██   ████ ██   ██ ██   ██ ████████
+    </div>
+
+    <div class="score">
+        <div id="score">SCORE: 0</div>
+        <div id="highScore">HIGH SCORE: 0</div>
+    </div>
+
+    <div class="game-board" id="board"></div>
+
+    <div class="status">
+        <div>ARROW KEYS: Move | SPACE: Pause | R: Restart</div>
+        <div id="status" class="blink">PRESS ANY ARROW KEY TO START</div>
+    </div>
+
+    <script>
+        console.log("Game loading...");
+
+        let game = {
+            width: 30,
+            height: 15,
+            snake: [{x: 15, y: 7}],
+            food: {x: 10, y: 5},
+            direction: {x: 0, y: 0},
+            nextDirection: {x: 0, y: 0},
+            score: 0,
+            highScore: 0,
+            running: false,
+            paused: false,
+            gameOver: false,
+            interval: null
+        };
+
+        // Load high score
+        try {
+            game.highScore = parseInt(localStorage.getItem('snakeHighScore') || '0');
+        } catch(e) {
+            game.highScore = 0;
+        }
+        document.getElementById('highScore').textContent = 'HIGH SCORE: ' + game.highScore;
+
+        function drawBoard() {
+            let board = '';
+            
+            for (let y = 0; y < game.height; y++) {
+                for (let x = 0; x < game.width; x++) {
+                    let cell = ' ';
+                    
+                    // Check if this position has snake head
+                    if (game.snake[0].x === x && game.snake[0].y === y) {
+                        cell = '@';
+                    }
+                    // Check if this position has snake body
+                    else if (game.snake.slice(1).some(seg => seg.x === x && seg.y === y)) {
+                        cell = '#';
+                    }
+                    // Check if this position has food
+                    else if (game.food.x === x && game.food.y === y) {
+                        cell = '*';
+                    }
+                    // Empty space
+                    else {
+                        cell = '.';
+                    }
+                    
+                    board += cell;
+                }
+                board += '\n';
+            }
+            
+            document.getElementById('board').textContent = board;
+        }
+
+        function generateFood() {
+            do {
+                game.food.x = Math.floor(Math.random() * game.width);
+                game.food.y = Math.floor(Math.random() * game.height);
+            } while (game.snake.some(seg => seg.x === game.food.x && seg.y === game.food.y));
+        }
+
+        function updateScore() {
+            document.getElementById('score').textContent = 'SCORE: ' + game.score;
+            if (game.score > game.highScore) {
+                game.highScore = game.score;
+                try {
+                    localStorage.setItem('snakeHighScore', game.highScore.toString());
+                } catch(e) {
+                    console.log("Cannot save high score");
+                }
+                document.getElementById('highScore').textContent = 'HIGH SCORE: ' + game.highScore;
+            }
+        }
+
+        function gameLoop() {
+            if (!game.running || game.paused || game.gameOver) return;
+
+            // Update direction from input buffer
+            game.direction = {...game.nextDirection};
+
+            // Calculate new head position
+            let newHead = {
+                x: game.snake[0].x + game.direction.x,
+                y: game.snake[0].y + game.direction.y
+            };
+
+            // Check wall collision
+            if (newHead.x < 0 || newHead.x >= game.width || 
+                newHead.y < 0 || newHead.y >= game.height) {
+                endGame();
+                return;
+            }
+
+            // Check self collision
+            if (game.snake.some(seg => seg.x === newHead.x && seg.y === newHead.y)) {
+                endGame();
+                return;
+            }
+
+            // Add new head
+            game.snake.unshift(newHead);
+
+            // Check food collision
+            if (newHead.x === game.food.x && newHead.y === game.food.y) {
+                game.score += 10;
+                updateScore();
+                generateFood();
+            } else {
+                // Remove tail if no food eaten
+                game.snake.pop();
+            }
+
+            drawBoard();
+        }
+
+        function startGame() {
+            console.log("Starting game...");
+            if (!game.running && !game.gameOver) {
+                game.running = true;
+                game.interval = setInterval(gameLoop, 200);
+                document.getElementById('status').textContent = 'GAME RUNNING';
+                document.getElementById('status').classList.remove('blink');
+            }
+        }
+
+        function pauseGame() {
+            if (game.running && !game.gameOver) {
+                game.paused = !game.paused;
+                if (game.paused) {
+                    document.getElementById('status').textContent = 'GAME PAUSED';
+                    document.getElementById('status').classList.add('blink');
+                } else {
+                    document.getElementById('status').textContent = 'GAME RUNNING';
+                    document.getElementById('status').classList.remove('blink');
+                }
+            }
+        }
+
+        function endGame() {
+            console.log("Game over!");
+            game.gameOver = true;
+            game.running = false;
+            clearInterval(game.interval);
+            document.getElementById('status').textContent = 'GAME OVER - PRESS R TO RESTART';
+            document.getElementById('status').classList.add('game-over');
+            document.getElementById('status').classList.add('blink');
+        }
+
+        function restartGame() {
+            console.log("Restarting game...");
+            game.snake = [{x: 15, y: 7}];
+            game.direction = {x: 0, y: 0};
+            game.nextDirection = {x: 0, y: 0};
+            game.score = 0;
+            game.running = false;
+            game.paused = false;
+            game.gameOver = false;
+            clearInterval(game.interval);
+            generateFood();
+            updateScore();
+            drawBoard();
+            document.getElementById('status').textContent = 'PRESS ANY ARROW KEY TO START';
+            document.getElementById('status').classList.remove('game-over');
+            document.getElementById('status').classList.add('blink');
+        }
+
+        // Keyboard controls
+        document.addEventListener('keydown', function(e) {
+            console.log("Key pressed:", e.key);
+            
+            if (game.gameOver && (e.key === 'r' || e.key === 'R')) {
+                restartGame();
+                e.preventDefault();
+                return;
+            }
+
+            switch(e.key) {
+                case 'ArrowUp':
+                    console.log("Arrow up pressed");
+                    if (game.direction.y !== 1) {
+                        game.nextDirection = {x: 0, y: -1};
+                        if (!game.running) startGame();
+                    }
+                    e.preventDefault();
+                    break;
+                case 'ArrowDown':
+                    console.log("Arrow down pressed");
+                    if (game.direction.y !== -1) {
+                        game.nextDirection = {x: 0, y: 1};
+                        if (!game.running) startGame();
+                    }
+                    e.preventDefault();
+                    break;
+                case 'ArrowLeft':
+                    console.log("Arrow left pressed");
+                    if (game.direction.x !== 1) {
+                        game.nextDirection = {x: -1, y: 0};
+                        if (!game.running) startGame();
+                    }
+                    e.preventDefault();
+                    break;
+                case 'ArrowRight':
+                    console.log("Arrow right pressed");
+                    if (game.direction.x !== -1) {
+                        game.nextDirection = {x: 1, y: 0};
+                        if (!game.running) startGame();
+                    }
+                    e.preventDefault();
+                    break;
+                case ' ':
+                    pauseGame();
+                    e.preventDefault();
+                    break;
+                case 'r':
+                case 'R':
+                    restartGame();
+                    e.preventDefault();
+                    break;
+            }
+        });
+
+        // Initialize game
+        console.log("Initializing game...");
+        generateFood();
+        drawBoard();
+        console.log("Game initialized. Press arrow keys to start!");
+    </script>
+</body>
+</html>
