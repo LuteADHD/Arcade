@@ -11,17 +11,20 @@
             background: #000;
             color: #00ff00;
             font-family: 'Courier New', monospace;
-            font-size: 14px;
-            line-height: 1.2;
+            font-size: 12px;
+            line-height: 1.1;
             min-height: 100vh;
             overflow-x: auto;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
         }
 
         .container {
             white-space: pre;
-            text-align: center;
-            max-width: 100%;
+            text-align: left;
             animation: flicker 3s infinite;
+            width: fit-content;
         }
 
         @keyframes flicker {
@@ -64,116 +67,90 @@
 </head>
 <body>
     <div class="container">
-╔══════════════════════════════════════════════════════════════════════════════════════════════════════╗
-║                                                                                                      ║
-║   █████╗ ███████╗ ██████╗██╗██╗    ██╗       █████╗ ██████╗  ██████╗ █████╗ ██████╗ ███████╗         ║
-║  ██╔══██╗██╔════╝██╔════╝██║██║    ██║      ██╔══██╗██╔══██╗██╔════╝██╔══██╗██╔══██╗██╔════╝         ║
-║  ███████║███████╗██║     ██║██║    ██║      ███████║██████╔╝██║     ███████║██║  ██║█████╗           ║
-║  ██╔══██║╚════██║██║     ██║██║    ██║      ██╔══██║██╔══██╗██║     ██╔══██║██║  ██║██╔══╝           ║
-║  ██║  ██║███████║╚██████╗██║██║    ██║      ██║  ██║██║  ██║╚██████╗██║  ██║██████╔╝███████╗         ║
-║  ╚═╝  ╚═╝╚══════╝ ╚═════╝╚═╝╚═╝    ╚═╝      ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝╚═════╝ ╚══════╝         ║
-║                                                                                                      ║
-╠══════════════════════════════════════════════════════════════════════════════════════════════════════╣
-║                                                                                                      ║
-║                            ██████╗ ███████╗████████╗██████╗  ██████╗                                 ║
-║                            ██╔══██╗██╔════╝╚══██╔══╝██╔══██╗██╔═══██╗                                ║
-║                            ██████╔╝█████╗     ██║   ██████╔╝██║   ██║                                ║
-║                            ██╔══██╗██╔══╝     ██║   ██╔══██╗██║   ██║                                ║
-║                            ██║  ██║███████╗   ██║   ██║  ██║╚██████╔╝                                ║
-║                            ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝                                 ║
-║                                                                                                      ║
-║                    ████████╗███████╗██████╗ ███╗   ███╗██╗███╗   ██╗ █████╗ ██╗                      ║
-║                    ╚══██╔══╝██╔════╝██╔══██╗████╗ ████║██║████╗  ██║██╔══██╗██║                      ║
-║                       ██║   █████╗  ██████╔╝██╔████╔██║██║██╔██╗ ██║███████║██║                      ║
-║                       ██║   ██╔══╝  ██╔══██╗██║╚██╔╝██║██║██║╚██╗██║██╔══██║██║                      ║
-║                       ██║   ███████╗██║  ██║██║ ╚═╝ ██║██║██║ ╚████║██║  ██║███████╗                 ║
-║                       ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝                 ║
-║                                                                                                      ║
-║                             ██████╗  █████╗ ███╗   ███╗██╗███╗   ██╗ ██████╗                         ║
-║                            ██╔════╝ ██╔══██╗████╗ ████║██║████╗  ██║██╔════╝                         ║
-║                            ██║  ███╗███████║██╔████╔██║██║██╔██╗ ██║██║  ███╗                        ║
-║                            ██║   ██║██╔══██║██║╚██╔╝██║██║██║╚██╗██║██║   ██║                        ║
-║                            ╚██████╔╝██║  ██║██║ ╚═╝ ██║██║██║ ╚████║╚██████╔╝                        ║
-║                             ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝ ╚═════╝                         ║
-║                                                                                                      ║
-║              ███████╗██╗  ██╗██████╗ ███████╗██████╗ ██╗███████╗███╗   ██╗ ██████╗███████╗           ║
-║              ██╔════╝╚██╗██╔╝██╔══██╗██╔════╝██╔══██╗██║██╔════╝████╗  ██║██╔════╝██╔════╝           ║
-║              █████╗   ╚███╔╝ ██████╔╝█████╗  ██████╔╝██║█████╗  ██╔██╗ ██║██║     █████╗             ║
-║              ██╔══╝   ██╔██╗ ██╔═══╝ ██╔══╝  ██╔══██╗██║██╔══╝  ██║╚██╗██║██║     ██╔══╝             ║
-║              ███████╗██╔╝ ██╗██║     ███████╗██║  ██║██║███████╗██║ ╚████║╚██████╗███████╗           ║
-║              ╚══════╝╚═╝  ╚═╝╚═╝     ╚══════╝╚═╝  ╚═╝╚═╝╚══════╝╚═╝  ╚═══╝ ╚═════╝╚══════╝           ║
-║                                                                                                      ║
-╠══════════════════════════════════════════════════════════════════════════════════════════════════════╣
-║                                                                                                      ║
-║                                      ░░░ GAME SELECTION MENU ░░░                                     ║
-║                                                                                                      ║
-║  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐  ║
-║  │                                                                                                │  ║
-║  │  <span class="game-option selectable" onclick="selectGame('pong')">[1] ████████    ██████  ███    ██  ██████                                     </span>  │  ║
-║  │      <span class="game-option selectable" onclick="selectGame('pong')">██    ██   ██    ██ ████   ██ ██                                          </span>  │  ║
-║  │      <span class="game-option selectable" onclick="selectGame('pong')">████████   ██    ██ ██ ██  ██ ██   ███                                    </span>  │  ║
-║  │      <span class="game-option selectable" onclick="selectGame('pong')">██         ██    ██ ██  ██ ██ ██    ██                                    </span>  │  ║
-║  │      <span class="game-option selectable" onclick="selectGame('pong')">██          ██████  ██   ████  ██████                                     </span>  │  ║
-║  │                                                                                                │  ║
-║  │      Classic paddle ball game - Two paddles, one ball, endless fun!                            │  ║
-║  │      Controls: Player 1 (W/S), Player 2 (↑/↓)                                                  │  ║
-║  │                                                                                                │  ║
-║  ├────────────────────────────────────────────────────────────────────────────────────────────────┤  ║
-║  │                                                                                                │  ║
-║  │  <span class="game-option selectable" onclick="selectGame('snake')">[2] ███████ ███    ██  █████  ██   ██ ████████                               </span>  │  ║
-║  │      <span class="game-option selectable" onclick="selectGame('snake')">██      ████   ██ ██   ██ ██  ██  ██                                     </span>  │  ║
-║  │      <span class="game-option selectable" onclick="selectGame('snake')">███████ ██ ██  ██ ███████ █████   ██████                                 </span>  │  ║
-║  │      <span class="game-option selectable" onclick="selectGame('snake')">     ██ ██  ██ ██ ██   ██ ██  ██  ██                                     </span>  │  ║
-║  │      <span class="game-option selectable" onclick="selectGame('snake')">███████ ██   ████ ██   ██ ██   ██ ████████                               </span>  │  ║
-║  │                                                                                                │  ║
-║  │      Guide your snake to eat food and grow longer without hitting walls!                       │  ║
-║  │      Controls: Arrow Keys (↑↓←→)                                                               │  ║
-║  │                                                                                                │  ║
-║  ├────────────────────────────────────────────────────────────────────────────────────────────────┤  ║
-║  │                                                                                                │  ║
-║  │  <span class="game-option selectable" onclick="selectGame('space')">[3] ███████ ██████   █████   ██████ ███████                                  </span>  │  ║
-║  │      <span class="game-option selectable" onclick="selectGame('space')">██      ██   ██ ██   ██ ██      ██                                        </span>  │  ║
-║  │      <span class="game-option selectable" onclick="selectGame('space')">███████ ██████  ███████ ██      █████                                     </span>  │  ║
-║  │      <span class="game-option selectable" onclick="selectGame('space')">     ██ ██      ██   ██ ██      ██                                        </span>  │  ║
-║  │      <span class="game-option selectable" onclick="selectGame('space')">███████ ██      ██   ██  ██████ ███████                                   </span>  │  ║
-║  │                                                                                                │  ║
-║  │      ██ ███    ██ ██    ██  █████  ██████  ███████ ██████  ███████                             │  ║
-║  │      ██ ████   ██ ██    ██ ██   ██ ██   ██ ██      ██   ██ ██                                  │  ║
-║  │      ██ ██ ██  ██ ██    ██ ███████ ██   ██ █████   ██████  ███████                             │  ║
-║  │      ██ ██  ██ ██  ██  ██  ██   ██ ██   ██ ██      ██   ██      ██                             │  ║
-║  │      ██ ██   ████   ████   ██   ██ ██████  ███████ ██   ██ ███████                             │  ║
-║  │                                                                                                │  ║
-║  │      Defend Earth from waves of alien invaders from outer space!                               │  ║
-║  │      Controls: Arrow Keys (←→) to move, Spacebar to shoot                                      │  ║
-║  │                                                                                                │  ║
-║  ├────────────────────────────────────────────────────────────────────────────────────────────────┤  ║
-║  │                                                                                                │  ║
-║  │  <span class="game-option selectable" onclick="selectGame('pacman')">[4] ██████   █████   ██████     ███    ███  █████  ███    ██               </span>  │  ║
-║  │      <span class="game-option selectable" onclick="selectGame('pacman')">██   ██ ██   ██ ██          ████  ████ ██   ██ ████   ██               </span>  │  ║
-║  │      <span class="game-option selectable" onclick="selectGame('pacman')">██████  ███████ ██          ██ ████ ██ ███████ ██ ██  ██               </span>  │  ║
-║  │      <span class="game-option selectable" onclick="selectGame('pacman')">██      ██   ██ ██          ██  ██  ██ ██   ██ ██  ██ ██               </span>  │  ║
-║  │      <span class="game-option selectable" onclick="selectGame('pacman')">██      ██   ██  ██████     ██      ██ ██   ██ ██   ████               </span>  │  ║
-║  │                                                                                                │  ║
-║  │      Navigate mazes, eat dots, and avoid ghosts in this classic arcade game!                   │  ║
-║  │      Controls: Arrow Keys (↑↓←→)                                                               │  ║
-║  │                                                                                                │  ║
-║  └────────────────────────────────────────────────────────────────────────────────────────────────┘  ║
-║                                                                                                      ║
-║                                    ░░░ HOW TO PLAY ░░░                                               ║
-║                                                                                                      ║
-║                              • Press number keys [1-4] to select a game                              ║
-║                              • Click on game titles to start playing                                 ║
-║                              • Press [ESC] to return to main menu                                    ║
-║                              • Use [Q] to quit any game                                              ║
-║                                                                                                      ║
-║                                       <span class="blink">▼ SELECT YOUR GAME ▼</span>                ║
-║                                                                                                      ║
-╚══════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔══════════════════════════════════════════════════════════════════════════════════════╗
+║                                                                                      ║
+║  █████╗ ███████╗ ██████╗██╗██╗      █████╗ ██████╗  ██████╗ █████╗ ██████╗ ███████╗  ║
+║ ██╔══██╗██╔════╝██╔════╝██║██║     ██╔══██╗██╔══██╗██╔════╝██╔══██╗██╔══██╗██╔════╝  ║
+║ ███████║███████╗██║     ██║██║     ███████║██████╔╝██║     ███████║██║  ██║█████╗    ║
+║ ██╔══██║╚════██║██║     ██║██║     ██╔══██║██╔══██╗██║     ██╔══██║██║  ██║██╔══╝    ║
+║ ██║  ██║███████║╚██████╗██║██║     ██║  ██║██║  ██║╚██████╗██║  ██║██████╔╝███████╗  ║
+║ ╚═╝  ╚═╝╚══════╝ ╚═════╝╚═╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝╚═════╝ ╚══════╝  ║
+║                                                                                      ║
+╠══════════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                      ║
+║                          ░░░ GAME SELECTION MENU ░░░                                ║
+║                                                                                      ║
+║ ┌──────────────────────────────────────────────────────────────────────────────────┐ ║
+║ │                                                                                  │ ║
+║ │ <span class="game-option selectable" onclick="selectGame('pong')">[1] ████████   ██████  ███    ██  ██████</span>                           │ ║
+║ │     <span class="game-option selectable" onclick="selectGame('pong')">██    ██  ██    ██ ████   ██ ██</span>                              │ ║
+║ │     <span class="game-option selectable" onclick="selectGame('pong')">████████  ██    ██ ██ ██  ██ ██   ███</span>                        │ ║
+║ │     <span class="game-option selectable" onclick="selectGame('pong')">██        ██    ██ ██  ██ ██ ██    ██</span>                        │ ║
+║ │     <span class="game-option selectable" onclick="selectGame('pong')">██         ██████  ██   ████  ██████</span>                         │ ║
+║ │                                                                                  │ ║
+║ │     Classic paddle ball game - Two paddles, one ball, endless fun!              │ ║
+║ │     Controls: Player 1 (W/S), Player 2 (↑/↓)                                    │ ║
+║ │                                                                                  │ ║
+║ ├──────────────────────────────────────────────────────────────────────────────────┤ ║
+║ │                                                                                  │ ║
+║ │ <span class="game-option selectable" onclick="selectGame('snake')">[2] ███████ ███    ██  █████  ██   ██ ████████</span>              
+     │ ║
+║ │     <span class="game-option selectable" onclick="selectGame('snake')">██      ████   ██ ██   ██ ██  ██  ██</span>                 
+        │ ║
+║ │     <span class="game-option selectable" onclick="selectGame('snake')">███████ ██ ██  ██ ███████ █████   ██████</span>                
+     │ ║
+║ │     <span class="game-option selectable" onclick="selectGame('snake')">     ██ ██  ██ ██ ██   ██ ██  ██  ██</span>                    
+     │ ║
+║ │     <span class="game-option selectable" onclick="selectGame('snake')">███████ ██   ████ ██   ██ ██   ██ ████████</span>             
+      │ ║
+║ │                                                                                  │ ║
+║ │     Guide your snake to eat food and grow longer without hitting walls!          │ ║
+║ │     Controls: Arrow Keys (↑↓←→)                                                 │ ║
+║ │                                                                                  │ ║
+║ ├──────────────────────────────────────────────────────────────────────────────────┤ ║
+║ │                                                                                  │ ║
+║ │ <span class="game-option selectable" onclick="selectGame('space')">[3] ███████ ██████   █████   ██████ ███████</span>                      │ ║
+║ │     <span class="game-option selectable" onclick="selectGame('space')">██      ██   ██ ██   ██ ██      ██</span>                            │ ║
+║ │     <span class="game-option selectable" onclick="selectGame('space')">███████ ██████  ███████ ██      █████</span>                         │ ║
+║ │     <span class="game-option selectable" onclick="selectGame('space')">     ██ ██      ██   ██ ██      ██</span>                            │ ║
+║ │     <span class="game-option selectable" onclick="selectGame('space')">███████ ██      ██   ██  ██████ ███████</span>                       │ ║
+║ │                                                                                  │ ║
+║ │     ██ ███    ██ ██    ██  █████  ██████  ███████ ██████  ███████                │ ║
+║ │     ██ ████   ██ ██    ██ ██   ██ ██   ██ ██      ██   ██ ██                     │ ║
+║ │     ██ ██ ██  ██ ██    ██ ███████ ██   ██ █████   ██████  ███████                │ ║
+║ │     ██ ██  ██ ██  ██  ██  ██   ██ ██   ██ ██      ██   ██      ██                │ ║
+║ │     ██ ██   ████   ████   ██   ██ ██████  ███████ ██   ██ ███████                │ ║
+║ │                                                                                  │ ║
+║ │     Defend Earth from waves of alien invaders from outer space!                  │ ║
+║ │     Controls: Arrow Keys (←→) to move, Spacebar to shoot                        │ ║
+║ │                                                                                  │ ║
+║ ├──────────────────────────────────────────────────────────────────────────────────┤ ║
+║ │                                                                                  │ ║
+║ │ <span class="game-option selectable" onclick="selectGame('pacman')">[4] ██████   █████   ██████     ███    ███  █████  ███    ██</span>   │ ║
+║ │     <span class="game-option selectable" onclick="selectGame('pacman')">██   ██ ██   ██ ██          ████  ████ ██   ██ ████   ██</span>   │ ║
+║ │     <span class="game-option selectable" onclick="selectGame('pacman')">██████  ███████ ██          ██ ████ ██ ███████ ██ ██  ██</span>   │ ║
+║ │     <span class="game-option selectable" onclick="selectGame('pacman')">██      ██   ██ ██          ██  ██  ██ ██   ██ ██  ██ ██</span>   │ ║
+║ │     <span class="game-option selectable" onclick="selectGame('pacman')">██      ██   ██  ██████     ██      ██ ██   ██ ██   ████</span>   │ ║
+║ │                                                                                  │ ║
+║ │     Navigate mazes, eat dots, and avoid ghosts in this classic arcade game!      │ ║
+║ │     Controls: Arrow Keys (↑↓←→)                                                 │ ║
+║ │                                                                                  │ ║
+║ └──────────────────────────────────────────────────────────────────────────────────┘ ║
+║                                                                                      ║
+║                              ░░░ HOW TO PLAY ░░░                                     ║
+║                                                                                      ║
+║                    • Press number keys [1-4] to select a game                        ║
+║                    • Click on game titles to start playing                           ║
+║                    • Press [ESC] to return to main menu                              ║
+║                    • Use [Q] to quit any game                                        ║
+║                                                                                      ║
+║                               <span class="blink">▼ SELECT YOUR GAME ▼</span>                              ║
+║                                                                                      ║
+╚══════════════════════════════════════════════════════════════════════════════════════╝
 
-              ┌─┐┌─┐┌─┐┌─┐   ┌─┐┌┐┌┬ ┬  ┬┌─┌─┐┬ ┬  ┌┬┐┌─┐  ┌─┐┌─┐┌┐┌┌┬┐┬┌┐┌┬ ┬┌─┐ ┬
-              ├─┘├┬┘├┤ └─┐   ├─┤│││└┬┘  ├┴┐├┤ └┬┘   │ │ │  │  │ ││││ │ ││││││ │├┤ │
-              ┴  ┴└─└─┘└─┘   ┴ ┴┘└┘ ┴   ┴ ┴└─┘ ┴    ┴ └─┘  └─┘└─┘┘└┘ ┴ ┴┘└┘└─┘└─┘ o
-
+        ┌─┐┌─┐┌─┐┌─┐   ┌─┐┌┐┌┬ ┬  ┬┌─┌─┐┬ ┬  ┌┬┐┌─┐  ┌─┐┌─┐┌┐┌┌┬┐┬┌┐┌┬ ┬┌─┐ ┬
+        ├─┘├┬┘├┤ └─┐   ├─┤│││└┬┘  ├┴┐├┤ └┬┘   │ │ │  │  │ ││││ │ ││││││ │├┤  │
+        ┴  ┴└─└─┘└─┘   ┴ ┴┘└┘ ┴   ┴ ┴└─┘ ┴    ┴ └─┘  └─┘└─┘┘└┘ ┴ ┴┘└┘└─┘└─┘ o
     </div>
 
     <script>
@@ -187,36 +164,36 @@
             
             document.body.innerHTML = `
                 <div class="container">
-╔══════════════════════════════════════════════════════════════════════════════════════════════════════╗
-║                                                                                                      ║
-║                                    ██╗      ██████╗  █████╗ ██████╗ ██╗███╗   ██╗ ██████╗            ║
-║                                    ██║     ██╔═══██╗██╔══██╗██╔══██╗██║████╗  ██║██╔════╝            ║
-║                                    ██║     ██║   ██║███████║██║  ██║██║██╔██╗ ██║██║  ███╗           ║
-║                                    ██║     ██║   ██║██╔══██║██║  ██║██║██║╚██╗██║██║   ██║           ║
-║                                    ███████╗╚██████╔╝██║  ██║██████╔╝██║██║ ╚████║╚██████╔╝           ║
-║                                    ╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚═════╝ ╚═╝╚═╝  ╚═══╝ ╚═════╝            ║
-║                                                                                                      ║
-║                                            ${games[game]}                                            ║
-║                                                                                                      ║
-║                              ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░                      ║
-║                              ░ INITIALIZING GAME ENGINE...              ░                            ║
-║                              ░ LOADING ASCII GRAPHICS...                ░                            ║
-║                              ░ PREPARING GAME FIELD...                  ░                            ║
-║                              ░ SETTING UP CONTROLLER...                 ░                            ║
-║                              ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░                      ║
-║                                                                                                      ║
-║                                    ██████╗ ███████╗ █████╗ ██████╗ ██╗   ██╗                         ║
-║                                    ██╔══██╗██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                         ║
-║                                    ██████╔╝█████╗  ███████║██║  ██║ ╚████╔╝                          ║
-║                                    ██╔══██╗██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                           ║
-║                                    ██║  ██║███████╗██║  ██║██████╔╝   ██║                            ║
-║                                    ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                            ║
-║                                                                                                      ║
-║                                        Starting in 3 seconds...                                      ║
-║                                                                                                      ║
-║                                      Press [ESC] to return to menu                                   ║
-║                                                                                                      ║
-╚══════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔══════════════════════════════════════════════════════════════════════════════════════╗
+║                                                                                      ║
+║            ██╗      ██████╗  █████╗ ██████╗ ██╗███╗   ██╗ ██████╗                    ║
+║            ██║     ██╔═══██╗██╔══██╗██╔══██╗██║████╗  ██║██╔════╝                    ║
+║            ██║     ██║   ██║███████║██║  ██║██║██╔██╗ ██║██║  ███╗                   ║
+║            ██║     ██║   ██║██╔══██║██║  ██║██║██║╚██╗██║██║   ██║                   ║
+║            ███████╗╚██████╔╝██║  ██║██████╔╝██║██║ ╚████║╚██████╔╝                   ║
+║            ╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚═════╝ ╚═╝╚═╝  ╚═══╝ ╚═════╝                    ║
+║                                                                                      ║
+║                                  ${games[game]}                                      ║
+║                                                                                      ║
+║                    ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░                  ║
+║                    ░ INITIALIZING GAME ENGINE...              ░                      ║
+║                    ░ LOADING ASCII GRAPHICS...                ░                      ║
+║                    ░ PREPARING GAME FIELD...                  ░                      ║
+║                    ░ SETTING UP CONTROLLER...                 ░                      ║
+║                    ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░                  ║
+║                                                                                      ║
+║            ██████╗ ███████╗ █████╗ ██████╗ ██╗   ██╗                                 ║
+║            ██╔══██╗██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                                 ║
+║            ██████╔╝█████╗  ███████║██║  ██║ ╚████╔╝                                  ║
+║            ██╔══██╗██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                                   ║
+║            ██║  ██║███████╗██║  ██║██████╔╝   ██║                                    ║
+║            ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                                    ║
+║                                                                                      ║
+║                              Starting in 3 seconds...                                ║
+║                                                                                      ║
+║                            Press [ESC] to return to menu                             ║
+║                                                                                      ║
+╚══════════════════════════════════════════════════════════════════════════════════════╝
                 </div>
             `;
             
